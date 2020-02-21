@@ -8,7 +8,12 @@ import (
 )
 
 type Config struct {
-	Urls []string `yaml:"urls"`
+	Urls                    []string `yaml:"urls"`
+	DataPath                string   `yaml:"data_path"`
+	DefaultTimeDeltaSeconds string   `yaml:"default_time_delta_seconds"`
+	Port                    int      `yaml:"port"`
+	OperateLogsPath         string   `yaml:"operate_logs_path"`
+	WebFolderPath           string   `yaml:"web_folder_path"`
 }
 
 func (c *Config) ReadConfigFromPath(filePath string) *Config {

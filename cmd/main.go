@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 
+	"yandex-catalog-handler/internal/consumer"
+	"yandex-catalog-handler/internal/loader"
+	"yandex-catalog-handler/internal/server"
 	"yandex-catalog-handler/pkg/config"
 )
 
@@ -21,5 +23,15 @@ func main() {
 	cfg := config.Config{}
 	cfg.ReadConfigFromPath(*configPath)
 
-	fmt.Println(cfg)
+	loaderService := loader.New(cfg)
+
+	consumerService := consumer.New(cfg, loaderService)
+
+	s := server.NewServer(cfg, consumerService)
+
+	err := s.Run()
+
+	if err != nil {
+		log.Fatal("Error when try server.NewServer, err: %s", err)
+	}
 }
