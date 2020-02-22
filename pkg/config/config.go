@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	Urls                    []string `yaml:"urls"`
+	SourceUrl               string   `yaml:"source_url"`
+	FileNames               []string `yaml:"filenames"`
 	DataPath                string   `yaml:"data_path"`
 	DefaultTimeDeltaSeconds string   `yaml:"default_time_delta_seconds"`
 	Port                    int      `yaml:"port"`
