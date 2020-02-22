@@ -159,8 +159,6 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 			}
 		}
 
-		c.names = nil
-
 		catalog.Shop.Offers.Offer = tmp
 
 		resultByFile.Now = len(catalog.Shop.Offers.Offer)
@@ -181,6 +179,8 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 
 		_ = ioutil.WriteFile(filePath, file, 0644)
 	}
+
+	c.names = nil
 
 	return
 }
