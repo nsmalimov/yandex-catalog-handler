@@ -113,7 +113,7 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 		log.Printf("Start read: %s\n", fileName)
 
 		resultByFile := entity.ResultByFile{
-			FileName: fmt.Sprint("%s%s", c.cfg.SourceUrl, fileName),
+			FileName: fmt.Sprintf("%s%s", c.cfg.SourceUrl, fileName),
 		}
 
 		var catalog Catalog

@@ -3,14 +3,14 @@ package main
 import (
 	"flag"
 	"log"
-	"yandex-catalog-handler/internal/concator"
-	"yandex-catalog-handler/internal/result"
-	"yandex-catalog-handler/pkg/storage"
 
+	"yandex-catalog-handler/internal/concator"
 	"yandex-catalog-handler/internal/consumer"
 	"yandex-catalog-handler/internal/loader"
+	"yandex-catalog-handler/internal/result"
 	"yandex-catalog-handler/internal/server"
 	"yandex-catalog-handler/pkg/config"
+	"yandex-catalog-handler/pkg/storage"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	flag.Parse()
 
 	if *configPath == "" {
-		log.Fatalf("config-path is empty")
+		log.Fatal("config-path is empty")
 		return
 	}
 
