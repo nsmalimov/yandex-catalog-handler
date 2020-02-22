@@ -5,9 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 
+	"yandex-catalog-handler/internal/entity"
 	"yandex-catalog-handler/pkg/config"
+)
+
+const (
+	Header = `<!DOCTYPE yml_catalog SYSTEM "shops.dtd">` + "\n"
 )
 
 type Concator struct {
@@ -22,45 +28,26 @@ func New(cfg config.Config) *Concator {
 	}
 }
 
-type Results struct {
-	Results []Result `json:"results"`
-}
-
-type Result struct {
-	FileName   string `json:"filename"`
-	Was        int    `json:"was"`
-	Now        int    `json:"now"`
-	WasRemove  int    `json:"was_remove"`
-	ErrorCause string `json:"error_cause"`
-}
-
 type Catalog struct {
 	XMLName xml.Name `xml:"yml_catalog"`
-	Text    string   `xml:",chardata"`
 	Date    string   `xml:"date,attr"`
 	Shop    struct {
-		Text       string `xml:",chardata"`
 		Name       string `xml:"name"`
 		Company    string `xml:"company"`
 		URL        string `xml:"url"`
 		Currencies struct {
-			Text     string `xml:",chardata"`
 			Currency struct {
-				Text string `xml:",chardata"`
 				ID   string `xml:"id,attr"`
 				Rate string `xml:"rate,attr"`
 			} `xml:"currency"`
 		} `xml:"currencies"`
 		Categories struct {
-			Text     string `xml:",chardata"`
 			Category []struct {
-				Text     string `xml:",chardata"`
 				ID       string `xml:"id,attr"`
 				ParentId string `xml:"parentId,attr"`
 			} `xml:"category"`
 		} `xml:"categories"`
 		DeliveryOptions struct {
-			Text   string `xml:",chardata"`
 			Option struct {
 				Text        string `xml:",chardata"`
 				Cost        string `xml:"cost,attr"`
@@ -69,7 +56,6 @@ type Catalog struct {
 			} `xml:"option"`
 		} `xml:"delivery-options"`
 		Offers struct {
-			Text  string `xml:",chardata"`
 			Offer []struct {
 				Text        string `xml:",chardata"`
 				ID          string `xml:"id,attr"`
@@ -110,11 +96,7 @@ func readFile(fileName string) (catalog Catalog, err error) {
 	return
 }
 
-//func RemoveElem(slice []Catalog, pos int)  {
-//	return append(slice[:s], slice[s+1:]...)
-//}
-
-func (c *Concator) Concate() (results Results, err error) {
+func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 	files, err := ioutil.ReadDir(c.cfg.DataPath)
 	if err != nil {
 		return
@@ -130,15 +112,18 @@ func (c *Concator) Concate() (results Results, err error) {
 
 		log.Printf("Start read: %s\n", fileName)
 
-		result := Result{
+		resultByFile := entity.ResultByFile{
 			FileName: fmt.Sprint("%s%s", c.cfg.SourceUrl, fileName),
 		}
 
 		var catalog Catalog
-		catalog, err = readFile(fmt.Sprintf("%s/%s", c.cfg.DataPath, fileName))
+
+		var filePath = fmt.Sprintf("%s/%s", c.cfg.DataPath, fileName)
+
+		catalog, err = readFile(filePath)
 
 		if err != nil {
-			result.ErrorCause = err.Error()
+			resultByFile.ErrorCause = err.Error()
 			return
 		}
 
@@ -151,7 +136,7 @@ func (c *Concator) Concate() (results Results, err error) {
 
 			if err != nil {
 				err = fmt.Errorf("Bad price value: %v can't convert from string to float")
-				result.ErrorCause = err.Error()
+				resultByFile.ErrorCause = err.Error()
 				return
 			}
 
@@ -160,14 +145,14 @@ func (c *Concator) Concate() (results Results, err error) {
 					price = oldPrice
 				}
 
-				result.WasRemove += 1
+				resultByFile.WasRemove += 1
 			} else {
 				tmp = append(tmp, offer)
 			}
 
 			c.names[offer.Name] = price
 
-			result.Was += 1
+			resultByFile.Was += 1
 
 			if index%10000 == 0 {
 				log.Printf("Processed: %d\n", index)
@@ -176,11 +161,23 @@ func (c *Concator) Concate() (results Results, err error) {
 
 		catalog.Shop.Offers.Offer = tmp
 
-		result.Now = len(catalog.Shop.Offers.Offer)
+		resultByFile.Now = len(catalog.Shop.Offers.Offer)
 
 		log.Printf("End read: %s\n", fileName)
 
-		results.Results = append(results.Results, result)
+		resultsByFile = append(resultsByFile, resultByFile)
+
+		err = os.Remove(filePath)
+
+		if err != nil {
+			return
+		}
+
+		file, _ := xml.MarshalIndent(catalog, "  ", "    ")
+
+		file = []byte(xml.Header + Header + string(file))
+
+		_ = ioutil.WriteFile(filePath, file, 0644)
 	}
 
 	return

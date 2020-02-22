@@ -2,10 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
-
 	"yandex-catalog-handler/internal/concator"
+	"yandex-catalog-handler/internal/result"
+	"yandex-catalog-handler/pkg/storage"
+
 	"yandex-catalog-handler/internal/consumer"
 	"yandex-catalog-handler/internal/loader"
 	"yandex-catalog-handler/internal/server"
@@ -27,35 +28,24 @@ func main() {
 
 	loaderService := loader.New(cfg)
 
-	consumerService := consumer.New(cfg, loaderService)
-
-	s := server.NewServer(cfg, consumerService)
-
-	//err := loaderService.Load()
-	//
-	//if err != nil {
-	//	log.Printf("Error when try loaderService.Load, err: ", err)
-	//}
-	//return
-
 	concatorService := concator.New(cfg)
 
-	result, err := concatorService.Concate()
+	consumerService := consumer.New(cfg, loaderService)
+
+	db, err := storage.New(cfg)
+
+	resultRepo := result.NewRepository(db)
+	resultService := result.NewService(resultRepo)
 
 	if err != nil {
-		log.Printf("Error when try concatorService.Concate, err: ", err)
-		return
+		log.Fatalf("Error when try storage.New, err: %s", err)
 	}
 
-	for _, elem := range result.Results {
-		fmt.Println(elem)
-	}
-
-	return
+	s := server.NewServer(cfg, consumerService, loaderService, concatorService, resultService)
 
 	err = s.Run()
 
 	if err != nil {
-		log.Fatal("Error when try server.NewServer, err: %s", err)
+		log.Fatalf("Error when try server.NewServer, err: %s", err)
 	}
 }

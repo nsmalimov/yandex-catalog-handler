@@ -15,6 +15,15 @@ type Config struct {
 	Port                    int      `yaml:"port"`
 	OperateLogsPath         string   `yaml:"operate_logs_path"`
 	WebFolderPath           string   `yaml:"web_folder_path"`
+	Db                      Db       `yaml:"db"`
+}
+
+type Db struct {
+	Host         string `yaml:"host"`
+	Port         int    `yaml:"port"`
+	DatabaseName string `yaml:"database_name"`
+	UserName     string `yaml:"user_name"`
+	Password     string `yaml:"password"`
 }
 
 func (c *Config) ReadConfigFromPath(filePath string) *Config {

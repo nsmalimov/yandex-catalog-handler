@@ -2,9 +2,9 @@ source_url: https://kronerauto.spb.ru/get_price?p=
 
 filenames:
   - 66343037-3430-3935-2D35-3163632D3131&FranchiseeId=383450
-  - 30616439-6263-3866-2D35-6364632D3131&FranchiseeId=383450
-  - 36366335-6664-3661-2D64-3761342D3131&FranchiseeId=383450
-  - 65303631-3762-6565-2D64-6335362D3131&FranchiseeId=383450
+#  - 30616439-6263-3866-2D35-6364632D3131&FranchiseeId=383450
+#  - 36366335-6664-3661-2D64-3761342D3131&FranchiseeId=383450
+#  - 65303631-3762-6565-2D64-6335362D3131&FranchiseeId=383450
 
 data_path: ../yandex-catalog-handler/data
 
@@ -15,3 +15,10 @@ port: 8896
 operate_logs_path: ../yandex-catalog-handler/operate_logs
 
 web_folder_path: ../yandex-catalog-handler/web
+
+db:
+  port: 5432
+  host: 79.143.29.247
+  database_name: yandex_catalog_handler
+  user_name: postgres
+  password: 123
