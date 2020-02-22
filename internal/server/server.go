@@ -64,16 +64,40 @@ func (h *ServerHandler) GetOperateLogs(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
-	// go func() {
-	resultMain := entity.Result{
-		Cause: "Ok",
-	}
+	go func() {
+		resultMain := entity.Result{
+			Cause: "Ok",
+		}
 
-	err := h.loaderService.Load()
-	if err != nil {
-		errS := fmt.Sprintf("Error when try loaderService.Load, err: %s", err)
-		resultMain.Cause = errS
-		log.Printf("%s\n", errS)
+		err := h.loaderService.Load()
+		if err != nil {
+			errS := fmt.Sprintf("Error when try loaderService.Load, err: %s", err)
+			resultMain.Cause = errS
+			log.Printf("%s\n", errS)
+
+			err = h.resultService.Create(resultMain)
+
+			if err != nil {
+				log.Printf("Error when try h.resultService.Create, err: %s", err)
+			}
+			return
+		}
+
+		//resultConcator, err := h.concatorService.Concate()
+		//if err != nil {
+		//	errS := fmt.Sprintf("Error when try concatorService.Concate, err: %s", err)
+		//	resultMain.Cause = errS
+		//	log.Printf("%s\n", errS)
+		//
+		//	err = h.resultService.Create(resultMain)
+		//
+		//	if err != nil {
+		//		log.Printf("Error when try h.resultService.Create, err: %s", err)
+		//	}
+		//	return
+		//}
+
+		// resultMain.Results = resultConcator
 
 		err = h.resultService.Create(resultMain)
 
@@ -81,38 +105,10 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			log.Printf("Error when try h.resultService.Create, err: %s", err)
 		}
 
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBody([]byte("Started. Wait."))
-	}
+		log.Println("Done")
 
-	resultConcator, err := h.concatorService.Concate()
-	if err != nil {
-		errS := fmt.Sprintf("Error when try concatorService.Concate, err: %s", err)
-		resultMain.Cause = errS
-		log.Printf("%s\n", errS)
-
-		err = h.resultService.Create(resultMain)
-
-		if err != nil {
-			log.Printf("Error when try h.resultService.Create, err: %s", err)
-		}
-
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBody([]byte("Started. Wait."))
-	}
-
-	resultMain.Results = resultConcator
-
-	err = h.resultService.Create(resultMain)
-
-	if err != nil {
-		log.Printf("Error when try h.resultService.Create, err: %s", err)
-	}
-
-	log.Println("Done")
-
-	// return
-	// }()
+		return
+	}()
 
 	ctx.SetStatusCode(fasthttp.StatusOK)
 	ctx.SetBody([]byte("Started. Wait."))
