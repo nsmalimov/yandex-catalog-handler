@@ -49,7 +49,6 @@ type Catalog struct {
 		} `xml:"categories"`
 		DeliveryOptions struct {
 			Option struct {
-				Text        string `xml:",chardata"`
 				Cost        string `xml:"cost,attr"`
 				Days        string `xml:"days,attr"`
 				OrderBefore string `xml:"order-before,attr"`
@@ -57,7 +56,6 @@ type Catalog struct {
 		} `xml:"delivery-options"`
 		Offers struct {
 			Offer []struct {
-				Text        string `xml:",chardata"`
 				ID          string `xml:"id,attr"`
 				Available   string `xml:"available,attr"`
 				URL         string `xml:"url"`
@@ -73,7 +71,6 @@ type Catalog struct {
 				SalesNotes  string `xml:"sales_notes"`
 				Barcode     string `xml:"barcode"`
 				Param       struct {
-					Text string `xml:",chardata"`
 					Name string `xml:"name,attr"`
 				} `xml:"param"`
 				Picture string `xml:"picture"`
@@ -109,6 +106,10 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 
 	for _, f := range files {
 		fileName := f.Name()
+
+		if fileName == ".DS_Store" {
+			continue
+		}
 
 		log.Printf("Start read: %s\n", fileName)
 
@@ -175,12 +176,14 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 
 		file, _ := xml.MarshalIndent(catalog, "  ", "    ")
 
-		file = []byte(xml.Header + Header + string(file))
+		headerBytes := []byte(xml.Header + Header)
+
+		headerBytes = append(headerBytes, file...)
 
 		_ = ioutil.WriteFile(filePath, file, 0644)
 	}
 
-	c.names = nil
+	c.names = make(map[string]float64)
 
 	return
 }

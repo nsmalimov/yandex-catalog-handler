@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"yandex-catalog-handler/internal/concator"
 	"yandex-catalog-handler/internal/consumer"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
+	_ "net/http/pprof"
 )
 
 type ServerHandler struct {
@@ -103,6 +105,8 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			log.Printf("Error when try h.resultService.Create, err: %s", err)
 		}
 
+		log.Println("Done")
+
 		return
 	}()
 
@@ -127,6 +131,10 @@ func (s *Server) Run() (err error) {
 	port := fmt.Sprintf(":%d", s.cfg.Port)
 
 	log.Printf("Ready to start on port: %s\n", port)
+
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	err = fasthttp.ListenAndServe(port, router.Handler)
 
