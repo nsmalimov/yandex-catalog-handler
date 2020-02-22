@@ -159,6 +159,8 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 			}
 		}
 
+		c.names = nil
+
 		catalog.Shop.Offers.Offer = tmp
 
 		resultByFile.Now = len(catalog.Shop.Offers.Offer)
