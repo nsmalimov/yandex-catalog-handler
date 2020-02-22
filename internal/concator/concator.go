@@ -178,7 +178,7 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 
 		headerBytes := []byte(xml.Header + Header)
 
-		headerBytes = append(headerBytes, file...)
+		file = append(headerBytes, file...)
 
 		_ = ioutil.WriteFile(filePath, file, 0644)
 	}
