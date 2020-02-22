@@ -83,21 +83,21 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			return
 		}
 
-		//resultConcator, err := h.concatorService.Concate()
-		//if err != nil {
-		//	errS := fmt.Sprintf("Error when try concatorService.Concate, err: %s", err)
-		//	resultMain.Cause = errS
-		//	log.Printf("%s\n", errS)
-		//
-		//	err = h.resultService.Create(resultMain)
-		//
-		//	if err != nil {
-		//		log.Printf("Error when try h.resultService.Create, err: %s", err)
-		//	}
-		//	return
-		//}
+		resultConcator, err := h.concatorService.Concate()
+		if err != nil {
+			errS := fmt.Sprintf("Error when try concatorService.Concate, err: %s", err)
+			resultMain.Cause = errS
+			log.Printf("%s\n", errS)
 
-		// resultMain.Results = resultConcator
+			err = h.resultService.Create(resultMain)
+
+			if err != nil {
+				log.Printf("Error when try h.resultService.Create, err: %s", err)
+			}
+			return
+		}
+
+		resultMain.Results = resultConcator
 
 		err = h.resultService.Create(resultMain)
 
