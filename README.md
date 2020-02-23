@@ -18,10 +18,10 @@ TODO:
 
 data/30616439-6263-3866-2D35-6364632D3131&FranchiseeId=383450
 
-http://79.143.31.238/data/66343037-3430-3935-2D35-3163632D3131&FranchiseeId=383450
-http://79.143.31.238/data/30616439-6263-3866-2D35-6364632D3131&FranchiseeId=383450
-http://79.143.31.238/data/36366335-6664-3661-2D64-3761342D3131&FranchiseeId=383450
-http://79.143.31.238/data/65303631-3762-6565-2D64-6335362D3131&FranchiseeId=383450
+http://5.101.51.209/data/66343037-3430-3935-2D35-3163632D3131&FranchiseeId=383450
+http://5.101.51.209/data/30616439-6263-3866-2D35-6364632D3131&FranchiseeId=383450
+http://5.101.51.209/data/36366335-6664-3661-2D64-3761342D3131&FranchiseeId=383450
+http://5.101.51.209/data/65303631-3762-6565-2D64-6335362D3131&FranchiseeId=383450
 
 docker run -d -p 5432:5432 --name my-postgres -e POSTGRES_PASSWORD=123 postgres
 
@@ -34,3 +34,17 @@ docker build -t yandex-catalog-handler .
 docker run -p 8080:8896 -it -v /Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data:/app/data --name yandex-catalog-handler yandex-catalog-handler
 
 docker run -p 8080:8896 -d -v /var/www/app/static/data:/app/data --name yandex-catalog-handler yandex-catalog-handler
+
+go tool pprof -gif http://localhost:6060/debug/pprof/profile
+
+Need
+
+логи с пагинацией
+
+запуск с кнопки
+
+расписание запуска
+
+добавление еще 1 файла (не прожует)
+
+анализ и понимание где утечка памяти

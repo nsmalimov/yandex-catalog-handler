@@ -1,10 +1,9 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
-
 	"yandex-catalog-handler/internal/concator"
 	"yandex-catalog-handler/internal/consumer"
 	"yandex-catalog-handler/internal/entity"
@@ -58,9 +57,26 @@ func (h *ServerHandler) SetDeltaTine(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *ServerHandler) GetOperateLogs(ctx *fasthttp.RequestCtx) {
-	ctx.SetStatusCode(fasthttp.StatusOK)
+	results, err := h.resultService.GetAll()
 
-	ctx.SetBody([]byte("some logs"))
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBody([]byte(err.Error()))
+
+		return
+	}
+
+	b, err := json.Marshal(results)
+
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBody([]byte(err.Error()))
+
+		return
+	}
+
+	ctx.SetStatusCode(fasthttp.StatusOK)
+	ctx.SetBody(b)
 }
 
 func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
@@ -71,38 +87,43 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 
 		err := h.loaderService.Load()
 		if err != nil {
-			errS := fmt.Sprintf("Error when try loaderService.Load, err: %s", err)
+			errS := fmt.Sprintf("Error when try loaderService.Load[h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 			resultMain.Cause = errS
 			log.Printf("%s\n", errS)
 
 			err = h.resultService.Create(resultMain)
 
 			if err != nil {
-				log.Printf("Error when try h.resultService.Create, err: %s", err)
+				log.Printf("Error when try h.resultService.Create[h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 			}
 			return
 		}
 
 		resultConcator, err := h.concatorService.Concate()
 		if err != nil {
-			errS := fmt.Sprintf("Error when try concatorService.Concate, err: %s", err)
+			errS := fmt.Sprintf("Error when try concatorService.Concate[h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 			resultMain.Cause = errS
 			log.Printf("%s\n", errS)
 
 			err = h.resultService.Create(resultMain)
 
 			if err != nil {
-				log.Printf("Error when try h.resultService.Create, err: %s", err)
+				log.Printf("Error when try h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 			}
 			return
 		}
 
-		resultMain.Results = resultConcator
+		b, err := json.Marshal(resultConcator)
+		if err != nil {
+			log.Printf("Error when try json.Marshal[(h *ServerHandler) StartCalc], err: %s", err)
+		}
+
+		resultMain.Results = b
 
 		err = h.resultService.Create(resultMain)
 
 		if err != nil {
-			log.Printf("Error when try h.resultService.Create, err: %s", err)
+			log.Printf("Error when try h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 		}
 
 		log.Println("Done")
@@ -118,23 +139,21 @@ func (s *Server) Run() (err error) {
 	router := fasthttprouter.New()
 	router.GET("/ping", s.serverHandler.Ping)
 	router.POST("/set_delta_time", s.serverHandler.SetDeltaTine)
-	router.POST("/get_operate_logs", s.serverHandler.SetDeltaTine)
+	router.GET("/get_operate_logs", s.serverHandler.GetOperateLogs)
 
 	router.GET("/start_calc", s.serverHandler.StartCalc)
 
-	router.GET("/", fasthttp.FSHandler(fmt.Sprintf(s.cfg.WebFolderPath, "index.html"), 1))
+	router.GET("/", fasthttp.FSHandler(fmt.Sprintf("%s/%s", s.cfg.WebFolderPath, "index.html"), 1))
 
-	router.GET("/get_price", fasthttp.FSHandler("/Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data/66343037-3430-3935-2D35-3163632D3131&FranchiseeId=383450", 2))
-
-	router.GET("/static/js/*filepath", fasthttp.FSHandler("/Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data/66343037-3430-3935-2D35-3163632D3131&FranchiseeId=383450", 0))
+	router.GET("/static/*filepath", fasthttp.FSHandler(s.cfg.WebFolderPath, 1))
 
 	port := fmt.Sprintf(":%d", s.cfg.Port)
 
 	log.Printf("Ready to start on port: %s\n", port)
 
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+	//go func() {
+	//	log.Println(http.ListenAndServe("localhost:6060", nil))
+	//}()
 
 	err = fasthttp.ListenAndServe(port, router.Handler)
 

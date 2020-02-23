@@ -6,6 +6,7 @@ import (
 
 type Repo interface {
 	Create(result entity.Result) error
+	GetAll() ([]*entity.Result, error)
 }
 
 type Service struct {
@@ -18,6 +19,12 @@ func NewService(repo Repo) *Service {
 
 func (s *Service) Create(result entity.Result) (err error) {
 	err = s.repo.Create(result)
+
+	return
+}
+
+func (s *Service) GetAll() (results []*entity.Result, err error) {
+	results, err = s.repo.GetAll()
 
 	return
 }

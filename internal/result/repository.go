@@ -27,3 +27,9 @@ func (r *Repository) Create(result entity.Result) (err error) {
 
 	return err
 }
+
+func (r *Repository) GetAll() (results []*entity.Result, err error) {
+	err = r.db.Select(&results, "SELECT * FROM operate_log")
+
+	return results, err
+}
