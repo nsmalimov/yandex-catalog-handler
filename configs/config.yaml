@@ -16,7 +16,7 @@ web_folder_path: ../web
 
 db:
   port: 5432
-  host: 79.143.29.247
+  host: 79.143.31.238
   database_name: yandex_catalog_handler
   user_name: postgres
   password: 123

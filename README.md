@@ -14,6 +14,8 @@ TODO:
 
 // develop
 
+docker run -d -p 5432:5432 --name my-postgres -e POSTGRES_PASSWORD=123 postgres
+
 docker run -p 8080:8896 -d --name yandex-catalog-handler yandex-catalog-handler
 
 docker run -p 8080:8896 -d -it --name yandex-catalog-handler yandex-catalog-handler
@@ -21,3 +23,5 @@ docker run -p 8080:8896 -d -it --name yandex-catalog-handler yandex-catalog-hand
 docker build -t yandex-catalog-handler .
 
 docker run -p 8080:8896 -d -it -v /Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data:/data --name yandex-catalog-handler yandex-catalog-handler
+
+docker run -p 8080:8896 -d -it -v /var/www/app/static/data:/data --name yandex-catalog-handler yandex-catalog-handler
