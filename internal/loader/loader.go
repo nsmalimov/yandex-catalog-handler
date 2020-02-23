@@ -45,7 +45,7 @@ func downloadFile(filepath string, url string) (err error) {
 
 func (l *Loader) Load() (err error) {
 	for _, fileName := range l.cfg.FileNames {
-		filePath := fmt.Sprintf("%s/%s", l.cfg.DataPath, fileName)
+		filePath := fmt.Sprintf("%s/%s.xml", l.cfg.DataPath, fileName)
 		url := fmt.Sprintf("%s%s", l.cfg.SourceUrl, fileName)
 
 		log.Printf("Start downloading, %s", fileName)
