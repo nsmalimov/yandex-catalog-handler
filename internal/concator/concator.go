@@ -153,6 +153,8 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 
 			c.names[offer.Name] = price
 
+			catalog.Shop.Offers.Offer[index].Price = fmt.Sprintf("%f", price)
+
 			resultByFile.Was += 1
 
 			if index%10000 == 0 {

@@ -122,7 +122,7 @@ func (s *Server) Run() (err error) {
 
 	router.GET("/start_calc", s.serverHandler.StartCalc)
 
-	router.GET("/index", fasthttp.FSHandler(s.cfg.WebFolderPath, 1))
+	router.GET("/", fasthttp.FSHandler(fmt.Sprintf(s.cfg.WebFolderPath, "index.html"), 1))
 
 	router.GET("/get_price", fasthttp.FSHandler("/Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data/66343037-3430-3935-2D35-3163632D3131&FranchiseeId=383450", 2))
 
