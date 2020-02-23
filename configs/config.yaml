@@ -6,13 +6,13 @@ filenames:
    - 36366335-6664-3661-2D64-3761342D3131&FranchiseeId=383450
    - 65303631-3762-6565-2D64-6335362D3131&FranchiseeId=383450
 
-data_path: ../yandex-catalog-handler/data
+data_path: ../data
 
 default_time_delta_seconds: 5
 
 port: 8896
 
-web_folder_path: ../yandex-catalog-handler/web
+web_folder_path: ../web
 
 db:
   port: 5432

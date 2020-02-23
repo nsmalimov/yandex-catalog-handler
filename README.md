@@ -11,3 +11,13 @@ TODO:
 Есть ещё параметр «цена» в прайсе, в идеале бы оставлять наибольшую цену. То есть перед тем как удалить дубли, необходимо сверить условие и удалить в данном случае тогда всё кроме предложения с наибольшей ценой в паре артикул+бренд
 
 Так же из пожеланий: в логах надо видеть сколько было изначально строк со всеми товарными предложения, сколько дублей убрано и конечное количество уникальных предложений. Все это по каждому файлу в итоге.
+
+// develop
+
+docker run -p 8080:8896 -d --name yandex-catalog-handler yandex-catalog-handler
+
+docker run -p 8080:8896 -d -it --name yandex-catalog-handler yandex-catalog-handler
+
+docker build -t yandex-catalog-handler .
+
+docker run -p 8080:8896 -d -it -v /Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data:/data --name yandex-catalog-handler yandex-catalog-handler
