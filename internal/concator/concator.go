@@ -141,7 +141,9 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 				return
 			}
 
-			if oldPrice, ok := c.names[offer.Name]; ok {
+			key := offer.Vendor + offer.VendorCode
+
+			if oldPrice, ok := c.names[key]; ok {
 				if oldPrice > price {
 					price = oldPrice
 				}
@@ -151,7 +153,7 @@ func (c *Concator) Concate() (resultsByFile []entity.ResultByFile, err error) {
 				tmp = append(tmp, offer)
 			}
 
-			c.names[offer.Name] = price
+			c.names[key] = price
 
 			catalog.Shop.Offers.Offer[index].Price = fmt.Sprintf("%f", price)
 

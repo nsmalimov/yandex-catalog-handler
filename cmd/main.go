@@ -1,18 +1,9 @@
 package main
 
 import (
-	"flag"
-	"log"
+	"fmt"
 	"runtime/debug"
 	"time"
-
-	"yandex-catalog-handler/internal/concator"
-	"yandex-catalog-handler/internal/consumer"
-	"yandex-catalog-handler/internal/loader"
-	"yandex-catalog-handler/internal/result"
-	"yandex-catalog-handler/internal/server"
-	"yandex-catalog-handler/pkg/config"
-	"yandex-catalog-handler/pkg/storage"
 )
 
 func periodicFree(d time.Duration) {
@@ -23,40 +14,5 @@ func periodicFree(d time.Duration) {
 }
 
 func main() {
-	configPath := flag.String("config-path", "", "path to config .yaml file")
-
-	go periodicFree(5 * time.Second)
-
-	flag.Parse()
-
-	if *configPath == "" {
-		log.Fatal("config-path is empty")
-		return
-	}
-
-	cfg := config.Config{}
-	cfg.ReadConfigFromPath(*configPath)
-
-	loaderService := loader.New(cfg)
-
-	concatorService := concator.New(cfg)
-
-	consumerService := consumer.New(cfg, loaderService)
-
-	db, err := storage.New(cfg)
-
-	resultRepo := result.NewRepository(db)
-	resultService := result.NewService(resultRepo)
-
-	if err != nil {
-		log.Fatalf("Error when try storage.New, err: %s", err)
-	}
-
-	s := server.NewServer(cfg, consumerService, loaderService, concatorService, resultService)
-
-	err = s.Run()
-
-	if err != nil {
-		log.Fatalf("Error when try server.NewServer, err: %s", err)
-	}
+	fmt.Println(111)
 }

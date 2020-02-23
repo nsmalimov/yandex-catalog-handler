@@ -31,6 +31,6 @@ docker run -p 8080:8896 -d -it --name yandex-catalog-handler yandex-catalog-hand
 
 docker build -t yandex-catalog-handler .
 
-docker run -p 8080:8896 -it -v /Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data:/data --name yandex-catalog-handler yandex-catalog-handler
+docker run -p 8080:8896 -it -v /Users/nurislam_alimov/IdeaProjects/yandex-catalog-handler/data:/app/data --name yandex-catalog-handler yandex-catalog-handler
 
-docker run -p 8080:8896 -it -v /var/www/app/static/data:/data --name yandex-catalog-handler yandex-catalog-handler
+docker run -p 8080:8896 -it -v /var/www/app/static/data:/app/data --name yandex-catalog-handler yandex-catalog-handler
