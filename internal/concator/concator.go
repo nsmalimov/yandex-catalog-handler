@@ -29,13 +29,13 @@ type ResultByFile struct {
 
 type Concator struct {
 	cfg    config.Config
-	result Result
+	Result Result
 }
 
 func New(cfg config.Config) *Concator {
 	return &Concator{
 		cfg:    cfg,
-		result: Result{},
+		Result: Result{},
 	}
 }
 
@@ -170,11 +170,11 @@ func (c *Concator) PrepareData(files []os.FileInfo) (
 				log.Printf("Processed: %d\n", index)
 			}
 
-			c.result.All += 1
+			c.Result.All += 1
 		}
 	}
 
-	c.result.Unic = len(prices)
+	c.Result.Unic = len(prices)
 
 	return
 }
@@ -267,7 +267,7 @@ func (c *Concator) Concate() (err error) {
 
 		countAll = 0
 
-		c.result.ResultByFile = append(c.result.ResultByFile, resultByFile)
+		c.Result.ResultByFile = append(c.Result.ResultByFile, resultByFile)
 	}
 
 	return

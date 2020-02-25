@@ -113,7 +113,7 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			return
 		}
 
-		b, err := json.Marshal(h.concatorService)
+		b, err := json.Marshal(h.concatorService.Result)
 		if err != nil {
 			log.Printf("Error when try json.Marshal[(h *ServerHandler) StartCalc], err: %s", err)
 		}
