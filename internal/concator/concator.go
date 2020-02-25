@@ -122,16 +122,14 @@ func GetPriceAndKey(offer Offer) (price float64, key string, err error) {
 	return
 }
 
-func (c *Concator) PrepareData(files []os.FileInfo) (
+func (c *Concator) PrepareData(files []string) (
 	catalogs map[string]Catalog,
 	prices map[string]float64,
 	err error) {
 	catalogs = make(map[string]Catalog)
 	prices = make(map[string]float64)
 
-	for _, f := range files {
-		fileName := f.Name()
-
+	for _, fileName := range files {
 		if fileName == ".DS_Store" {
 			continue
 		}
@@ -208,18 +206,14 @@ func (c *Concator) WriteToFile(catalog Catalog, fileName string) (err error) {
 }
 
 func (c *Concator) Concate() (err error) {
-	files, err := ioutil.ReadDir(c.cfg.DataPath)
-	if err != nil {
-		return
-	}
-
-	if len(files) == 0 {
-		err = fmt.Errorf("No one file in %s", c.cfg.DataPath)
-		return
-	}
-
 	var catalogs map[string]Catalog
 	var prices map[string]float64
+
+	files := c.cfg.FileNames
+
+	for index, _ := range files {
+		files[index] += ".xml"
+	}
 
 	catalogs, prices, err = c.PrepareData(files)
 
