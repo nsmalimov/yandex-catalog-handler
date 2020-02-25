@@ -13,11 +13,3 @@ type Result struct {
 	CreatedAt time.Time      `db:"created_at" json:"created_at"`
 	UpdatedAt time.Time      `db:"updated_at" json:"updated_at"`
 }
-
-type ResultByFile struct {
-	FileName   string `json:"filename"`
-	Was        int    `json:"was"`
-	Now        int    `json:"now"`
-	WasRemove  int    `json:"was_remove"`
-	ErrorCause string `json:"error_cause"`
-}

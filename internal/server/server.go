@@ -99,7 +99,7 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			return
 		}
 
-		resultConcator, err := h.concatorService.Concate()
+		err = h.concatorService.Concate()
 		if err != nil {
 			errS := fmt.Sprintf("Error when try concatorService.Concate[h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 			resultMain.Cause = errS
@@ -113,7 +113,7 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			return
 		}
 
-		b, err := json.Marshal(resultConcator)
+		b, err := json.Marshal(h.concatorService)
 		if err != nil {
 			log.Printf("Error when try json.Marshal[(h *ServerHandler) StartCalc], err: %s", err)
 		}
