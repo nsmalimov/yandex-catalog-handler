@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
 	"yandex-catalog-handler/internal/concator"
 	"yandex-catalog-handler/internal/consumer"
 	"yandex-catalog-handler/internal/entity"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
-	_ "net/http/pprof"
 )
 
 type ServerHandler struct {
@@ -150,10 +150,6 @@ func (s *Server) Run() (err error) {
 	port := fmt.Sprintf(":%d", s.cfg.Port)
 
 	log.Printf("Ready to start on port: %s\n", port)
-
-	//go func() {
-	//	log.Println(http.ListenAndServe("localhost:6060", nil))
-	//}()
 
 	err = fasthttp.ListenAndServe(port, router.Handler)
 

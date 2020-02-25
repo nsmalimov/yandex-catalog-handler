@@ -85,6 +85,7 @@ type Offer struct {
 	Delivery    string `xml:"delivery"`
 	Name        string `xml:"name"`
 	Vendor      string `xml:"vendor"`
+	Pricture    string `xml:"picture"`
 	VendorCode  string `xml:"vendorCode"`
 	Description string `xml:"description"`
 	SalesNotes  string `xml:"sales_notes"`
@@ -231,6 +232,8 @@ func (c *Concator) Concate() (err error) {
 	countAll := 0
 
 	for filename, catalog := range catalogs {
+		log.Printf("Start handle: %s", filename)
+
 		resultByFile := ResultByFile{}
 
 		tmp := catalog.Shop.Offers.Offer[:0]
