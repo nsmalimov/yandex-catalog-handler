@@ -198,7 +198,7 @@ func (c *Concator) WriteToFile(catalog Catalog, fileName string) (err error) {
 
 	file = append(headerBytes, file...)
 
-	err = ioutil.WriteFile(filePath+"_111", file, 0644)
+	err = ioutil.WriteFile(filePath, file, 0644)
 	if err != nil {
 		return
 	}
