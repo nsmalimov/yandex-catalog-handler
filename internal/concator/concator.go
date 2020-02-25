@@ -182,10 +182,10 @@ func (c *Concator) PrepareData(files []os.FileInfo) (
 func (c *Concator) WriteToFile(catalog Catalog, fileName string) (err error) {
 	filePath := fmt.Sprintf("%s/%s", c.cfg.DataPath, fileName)
 
-	//err = os.Remove(filePath)
-	//if err != nil {
-	//	return
-	//}
+	err = os.Remove(filePath)
+	if err != nil {
+		return
+	}
 
 	var file []byte
 
@@ -221,8 +221,6 @@ func (c *Concator) Concate() (err error) {
 	var prices map[string]float64
 
 	catalogs, prices, err = c.PrepareData(files)
-
-	fmt.Println(c.result.All, c.result.Unic)
 
 	alreadyWritten := make(map[string]interface{})
 
@@ -270,10 +268,6 @@ func (c *Concator) Concate() (err error) {
 		countAll = 0
 
 		c.result.ResultByFile = append(c.result.ResultByFile, resultByFile)
-	}
-
-	for _, elem := range c.result.ResultByFile {
-		fmt.Println(elem.FileName, elem.Was, elem.Now)
 	}
 
 	return
