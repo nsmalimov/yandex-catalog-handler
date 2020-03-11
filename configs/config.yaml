@@ -18,5 +18,5 @@ db:
   port: 5432
   host: 5.101.51.209
   database_name: yandex_catalog_handler
-  user_name: postgres
+  user_name: user1
   password: 123
