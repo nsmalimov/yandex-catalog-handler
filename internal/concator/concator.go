@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime"
 	"strconv"
 
 	"yandex-catalog-handler/pkg/config"
@@ -205,6 +206,22 @@ func (c *Concator) WriteToFile(catalog Catalog, fileName string) (err error) {
 	return
 }
 
+// PrintMemUsage outputs the current, total and OS memory being used. As well as the number
+// of garage collection cycles completed.
+func PrintMemUsage() {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
+	fmt.Printf("Alloc = %v MiB", bToMb(m.Alloc))
+	fmt.Printf("\tTotalAlloc = %v MiB", bToMb(m.TotalAlloc))
+	fmt.Printf("\tSys = %v MiB", bToMb(m.Sys))
+	fmt.Printf("\tNumGC = %v\n", m.NumGC)
+}
+
+func bToMb(b uint64) uint64 {
+	return b / 1024 / 1024
+}
+
 func (c *Concator) Concate() (err error) {
 	var catalogs map[string]Catalog
 	var prices map[string]float64
@@ -217,15 +234,17 @@ func (c *Concator) Concate() (err error) {
 
 	catalogs, prices, err = c.PrepareData(files)
 
-	alreadyWritten := make(map[string]interface{})
-
 	if err != nil {
 		return
 	}
 
+	alreadyWritten := make(map[string]interface{})
+
 	countAll := 0
 
 	for filename, catalog := range catalogs {
+		PrintMemUsage()
+
 		log.Printf("Start handle: %s", filename)
 
 		resultByFile := ResultByFile{}
@@ -236,6 +255,10 @@ func (c *Concator) Concate() (err error) {
 			var key string
 
 			_, key, err = GetPriceAndKey(offer)
+
+			if err != nil {
+				return
+			}
 
 			countAll += 1
 
