@@ -226,7 +226,9 @@ func (c *Concator) Concate() (err error) {
 	var catalogs map[string]Catalog
 	var prices map[string]float64
 
-	files := c.cfg.FileNames
+	files := make([]string, 0)
+
+	copy(files, c.cfg.FileNames)
 
 	for index, _ := range files {
 		files[index] += ".xml"
