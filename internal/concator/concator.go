@@ -226,7 +226,7 @@ func (c *Concator) Concate() (err error) {
 	var catalogs map[string]Catalog
 	var prices map[string]float64
 
-	files := make([]string, 0)
+	files := make([]string, len(c.cfg.FileNames))
 
 	copy(files, c.cfg.FileNames)
 
@@ -286,6 +286,8 @@ func (c *Concator) Concate() (err error) {
 		resultByFile.FileName = filename
 		resultByFile.Was = countAll
 		resultByFile.Now = len(tmp)
+
+		fmt.Println(resultByFile)
 
 		countAll = 0
 
