@@ -245,8 +245,6 @@ func (c *Concator) Concate() (err error) {
 	countAll := 0
 
 	for filename, catalog := range catalogs {
-		PrintMemUsage()
-
 		log.Printf("Start handle: %s", filename)
 
 		resultByFile := ResultByFile{}
@@ -286,8 +284,6 @@ func (c *Concator) Concate() (err error) {
 		resultByFile.FileName = filename
 		resultByFile.Was = countAll
 		resultByFile.Now = len(tmp)
-
-		fmt.Println(resultByFile)
 
 		countAll = 0
 

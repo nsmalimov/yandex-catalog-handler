@@ -3,8 +3,6 @@ package main
 import (
 	"flag"
 	"log"
-	"runtime/debug"
-	"time"
 
 	"yandex-catalog-handler/internal/concator"
 	"yandex-catalog-handler/internal/consumer"
@@ -15,17 +13,8 @@ import (
 	"yandex-catalog-handler/pkg/storage"
 )
 
-func periodicFree(d time.Duration) {
-	tick := time.Tick(d)
-	for _ = range tick {
-		debug.FreeOSMemory()
-	}
-}
-
 func main() {
 	configPath := flag.String("config-path", "", "path to config .yaml file")
-
-	go periodicFree(5 * time.Second)
 
 	flag.Parse()
 
