@@ -126,6 +126,8 @@ func (h *ServerHandler) StartCalc(ctx *fasthttp.RequestCtx) {
 			log.Printf("Error when try h.resultService.Create[(h *ServerHandler) StartCalc], err: %s", err)
 		}
 
+		h.concatorService.Result = concator.Result{}
+
 		log.Println("Done")
 
 		return

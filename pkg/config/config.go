@@ -8,13 +8,12 @@ import (
 )
 
 type Config struct {
-	SourceUrl               string   `yaml:"source_url"`
-	FileNames               []string `yaml:"filenames"`
-	DataPath                string   `yaml:"data_path"`
-	DefaultTimeDeltaSeconds string   `yaml:"default_time_delta_seconds"`
-	Port                    int      `yaml:"port"`
-	WebFolderPath           string   `yaml:"web_folder_path"`
-	Db                      Db       `yaml:"db"`
+	SourceUrl     string   `yaml:"source_url"`
+	FileNames     []string `yaml:"filenames"`
+	DataPath      string   `yaml:"data_path"`
+	Port          int      `yaml:"port"`
+	WebFolderPath string   `yaml:"web_folder_path"`
+	Db            Db       `yaml:"db"`
 }
 
 type Db struct {

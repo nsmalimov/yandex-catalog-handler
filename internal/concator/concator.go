@@ -228,10 +228,8 @@ func (c *Concator) Concate() (err error) {
 
 	files := make([]string, len(c.cfg.FileNames))
 
-	copy(files, c.cfg.FileNames)
-
-	for index, _ := range files {
-		files[index] += ".xml"
+	for index, filename := range c.cfg.FileNames {
+		files[index] = filename + ".xml"
 	}
 
 	catalogs, prices, err = c.PrepareData(files)
